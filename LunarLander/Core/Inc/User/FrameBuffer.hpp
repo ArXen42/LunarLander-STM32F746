@@ -4,33 +4,37 @@
 #include "RGB565Color.hpp"
 #include "Vector2D.hpp"
 
-/// Provides access to framebuffer.
-class FrameBuffer
+namespace LunarLander
 {
-public:
-	static constexpr uint16_t Width  = 480;
-	static constexpr uint16_t Height = 272;
-
-	static constexpr size_t MemorySize = Width * Height * (5 + 6 + 5) / 16;
-
-public:
-	static std::array<uint16_t, MemorySize> Memory;
-
-	static void Fill(RGB565Color color)
+	/// Provides access to framebuffer.
+	class FrameBuffer
 	{
-		// TODO: DMA2D
-		for (size_t i = 0; i < MemorySize; i++)
+	public:
+		static constexpr uint16_t Width  = 480;
+		static constexpr uint16_t Height = 272;
+
+		static constexpr size_t MemorySize = Width * Height * (5 + 6 + 5) / 16;
+
+	public:
+		static std::array<uint16_t, MemorySize> Memory;
+
+		static void Fill(RGB565Color color)
 		{
-			Memory[i] = color.Value;
+			// TODO: DMA2D
+			for (size_t i = 0; i < MemorySize; i++)
+			{
+				Memory[i] = color.Value;
+			}
 		}
-	}
 
-	static void SetPixel(const Vector2DUint16 &pos, RGB565Color color)
-	{
-		Memory[pos.Y * Width + pos.X] = color.Value;
-	}
+		static void SetPixel(const Vector2DUInt16& pos, RGB565Color color)
+		{
+			Memory[(Height - pos.Y - 1) * Width + pos.X] = color.Value;
+		}
 
-	static void DrawLine(RGB565Color color, const Vector2DUint16 &start, const Vector2DUint16 &end)
-	{
-	}
-};
+		static void DrawLine(RGB565Color color, const Vector2DUInt16& start, const Vector2DUInt16& end)
+		{
+		}
+	};
+}
+

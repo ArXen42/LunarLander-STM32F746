@@ -56,7 +56,7 @@ void MX_TIM5_Init(void)
 
 }
 
-void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
 {
 
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -85,7 +85,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *tim_baseHandle)
 	}
 }
 
-void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *tim_baseHandle)
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 {
 
 	if (tim_baseHandle->Instance == TIM5)

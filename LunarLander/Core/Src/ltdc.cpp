@@ -61,7 +61,7 @@ void MX_LTDC_Init(void)
 	pLayerCfg.Alpha0          = 0;
 	pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
 	pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
-	pLayerCfg.FBStartAdress   = reinterpret_cast<uint32_t>(FrameBuffer::Memory.data());
+	pLayerCfg.FBStartAdress   = reinterpret_cast<uint32_t>(LunarLander::FrameBuffer::Memory.data());
 	pLayerCfg.ImageWidth      = 480;
 	pLayerCfg.ImageHeight     = 272;
 	pLayerCfg.Backcolor.Blue  = 0;
@@ -74,7 +74,7 @@ void MX_LTDC_Init(void)
 
 }
 
-void HAL_LTDC_MspInit(LTDC_HandleTypeDef *ltdcHandle)
+void HAL_LTDC_MspInit(LTDC_HandleTypeDef* ltdcHandle)
 {
 
 	GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -169,7 +169,7 @@ void HAL_LTDC_MspInit(LTDC_HandleTypeDef *ltdcHandle)
 	}
 }
 
-void HAL_LTDC_MspDeInit(LTDC_HandleTypeDef *ltdcHandle)
+void HAL_LTDC_MspDeInit(LTDC_HandleTypeDef* ltdcHandle)
 {
 
 	if (ltdcHandle->Instance == LTDC)

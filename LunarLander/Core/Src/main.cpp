@@ -30,6 +30,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "User/FrameBuffer.hpp"
+#include <User/Terrain.hpp>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -114,21 +115,19 @@ int main(void)
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 
+	using namespace LunarLander;
+	auto terrain = Terrain{};
+
 	while (true)
 	{
 		while (HAL_LTDC_GetState(&hltdc) != HAL_LTDC_STATE_READY);
 		FrameBuffer::Fill(RGB565Color::Black());
-		FrameBuffer::SetPixel({100,100}, RGB565Color::White());
-		FrameBuffer::SetPixel({100,101}, RGB565Color::White());
-		FrameBuffer::SetPixel({100,102}, RGB565Color::White());
-		FrameBuffer::SetPixel({100,103}, RGB565Color::White());
-		FrameBuffer::SetPixel({100,104}, RGB565Color::White());
-		FrameBuffer::SetPixel({100,105}, RGB565Color::White());
-		FrameBuffer::SetPixel({101,100}, RGB565Color::White());
-		FrameBuffer::SetPixel({102,100}, RGB565Color::White());
-		FrameBuffer::SetPixel({103,100}, RGB565Color::White());
-		FrameBuffer::SetPixel({104,100}, RGB565Color::White());
-		FrameBuffer::SetPixel({105,100}, RGB565Color::White());
+
+		for (uint16_t i = 00; i < 480; ++i)
+		{
+			FrameBuffer::SetPixel({i, terrain.GetHeightmap()[i + 100]}, RGB565Color::White());
+		}
+
 		while (HAL_LTDC_GetState(&hltdc) == HAL_LTDC_STATE_READY);
 		/* USER CODE END WHILE */
 
@@ -215,7 +214,7 @@ void SystemClock_Config(void)
   * @param  htim : TIM handle
   * @retval None
   */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
 	/* USER CODE BEGIN Callback 0 */
 

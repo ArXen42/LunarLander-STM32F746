@@ -49,7 +49,7 @@ void MX_DMA2D_Init(void)
 
 }
 
-void HAL_DMA2D_MspInit(DMA2D_HandleTypeDef *dma2dHandle)
+void HAL_DMA2D_MspInit(DMA2D_HandleTypeDef* dma2dHandle)
 {
 
 	if (dma2dHandle->Instance == DMA2D)
@@ -69,7 +69,7 @@ void HAL_DMA2D_MspInit(DMA2D_HandleTypeDef *dma2dHandle)
 	}
 }
 
-void HAL_DMA2D_MspDeInit(DMA2D_HandleTypeDef *dma2dHandle)
+void HAL_DMA2D_MspDeInit(DMA2D_HandleTypeDef* dma2dHandle)
 {
 
 	if (dma2dHandle->Instance == DMA2D)

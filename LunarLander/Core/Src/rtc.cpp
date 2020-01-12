@@ -101,7 +101,7 @@ void MX_RTC_Init(void)
 
 }
 
-void HAL_RTC_MspInit(RTC_HandleTypeDef *rtcHandle)
+void HAL_RTC_MspInit(RTC_HandleTypeDef* rtcHandle)
 {
 
 	if (rtcHandle->Instance == RTC)
@@ -117,7 +117,7 @@ void HAL_RTC_MspInit(RTC_HandleTypeDef *rtcHandle)
 	}
 }
 
-void HAL_RTC_MspDeInit(RTC_HandleTypeDef *rtcHandle)
+void HAL_RTC_MspDeInit(RTC_HandleTypeDef* rtcHandle)
 {
 
 	if (rtcHandle->Instance == RTC)
