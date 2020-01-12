@@ -29,8 +29,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "User/FrameBuffer.hpp"
-#include <User/Terrain.hpp>
+#include <User/GameState.hpp>
+#include <User/Renderer.hpp>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -116,19 +116,16 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 
 	using namespace LunarLander;
-	auto terrain = Terrain{};
 
+	GameState gameState{};
 	while (true)
 	{
 		while (HAL_LTDC_GetState(&hltdc) != HAL_LTDC_STATE_READY);
-		FrameBuffer::Fill(RGB565Color::Black());
 
-		for (uint16_t i = 00; i < 480; ++i)
-		{
-			FrameBuffer::SetPixel({i, terrain.GetHeightmap()[i + 100]}, RGB565Color::White());
-		}
+		gameState.OnTick();
+		Renderer::Render(gameState);
 
-		while (HAL_LTDC_GetState(&hltdc) == HAL_LTDC_STATE_READY);
+//		while (HAL_LTDC_GetState(&hltdc) == HAL_LTDC_STATE_READY);
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

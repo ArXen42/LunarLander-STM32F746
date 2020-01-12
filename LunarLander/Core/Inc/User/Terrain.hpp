@@ -16,7 +16,7 @@ namespace LunarLander
 			GenerateHeightmap(20, 80, 500);
 		}
 
-		const std::array<uint16_t, TerrainLength>& GetHeightmap()
+		[[nodiscard]] const std::array<uint16_t, TerrainLength>& GetHeightmap() const
 		{ return _heightmap; }
 
 	private:

@@ -10,8 +10,10 @@ namespace LunarLander
 	class FrameBuffer
 	{
 	public:
-		static constexpr uint16_t Width  = 480;
-		static constexpr uint16_t Height = 272;
+		static constexpr uint16_t HalfWidth  = 240;
+		static constexpr uint16_t HalfHeight = 136;
+		static constexpr uint16_t Width      = HalfWidth * 2;
+		static constexpr uint16_t Height     = HalfHeight * 2;
 
 		static constexpr size_t MemorySize = Width * Height * (5 + 6 + 5) / 16;
 
