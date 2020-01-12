@@ -20,7 +20,7 @@
 #ifndef __ltdc_H
 #define __ltdc_H
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/

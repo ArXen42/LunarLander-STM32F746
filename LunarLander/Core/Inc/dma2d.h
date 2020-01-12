@@ -20,7 +20,7 @@
 #ifndef __dma2d_H
 #define __dma2d_H
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/

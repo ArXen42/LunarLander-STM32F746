@@ -20,7 +20,7 @@
 #ifndef __sys_H
 #define __sys_H
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/

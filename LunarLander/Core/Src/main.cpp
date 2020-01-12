@@ -29,7 +29,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "FrameBuffer.h"
+#include "User/FrameBuffer.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +54,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -70,65 +71,71 @@ void MX_FREERTOS_Init(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
+	/* USER CODE BEGIN 1 */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
+	/* USER CODE END 1 */
 
-  /* USER CODE END 1 */
-  
 
-  /* MCU Configuration--------------------------------------------------------*/
+	/* MCU Configuration--------------------------------------------------------*/
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+	HAL_Init();
 
-  /* USER CODE BEGIN Init */
+	/* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
+	/* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
+	/* Configure the system clock */
+	SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
+	/* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
+	/* USER CODE END SysInit */
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA2D_Init();
-  MX_LTDC_Init();
-  MX_RTC_Init();
-  MX_TIM5_Init();
-  /* USER CODE BEGIN 2 */
+	/* Initialize all configured peripherals */
+	MX_GPIO_Init();
+	MX_DMA2D_Init();
+	MX_LTDC_Init();
+	MX_RTC_Init();
+	MX_TIM5_Init();
+	/* USER CODE BEGIN 2 */
 
-  /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
-  /* Call init function for freertos objects (in freertos.c) */
+	/* Call init function for freertos objects (in freertos.c) */
 //  MX_FREERTOS_Init();
 
-  /* Start scheduler */
+	/* Start scheduler */
 //  osKernelStart();
-  
-  /* We should never get here as control is now taken by the scheduler */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-	uint8_t color = 0;
-	while (1)
+	/* We should never get here as control is now taken by the scheduler */
+
+	/* Infinite loop */
+	/* USER CODE BEGIN WHILE */
+
+	while (true)
 	{
-		for (size_t i = 0; i < 480 * 272 * (5 + 6 + 5) / 16; i++)
-		{
-			uint16_t color5 = color * 32 / 255;
-			uint16_t color6 = color * 64 / 255;
-			uint16_t rgb565 = (color5 << (5 + 6) | (color6 << 5) | color5);
-			FrameBuffer[i] = rgb565;
-		}
-		color++;
-		while ((LTDC->CDSR & LTDC_CDSR_VSYNCS) == 0);// wait for next frame
-		while ((LTDC->CDSR & LTDC_CDSR_VSYNCS) == 1);
-    /* USER CODE END WHILE */
+		while (HAL_LTDC_GetState(&hltdc) != HAL_LTDC_STATE_READY);
+		FrameBuffer::Fill(RGB565Color::Black());
+		FrameBuffer::SetPixel({100,100}, RGB565Color::White());
+		FrameBuffer::SetPixel({100,101}, RGB565Color::White());
+		FrameBuffer::SetPixel({100,102}, RGB565Color::White());
+		FrameBuffer::SetPixel({100,103}, RGB565Color::White());
+		FrameBuffer::SetPixel({100,104}, RGB565Color::White());
+		FrameBuffer::SetPixel({100,105}, RGB565Color::White());
+		FrameBuffer::SetPixel({101,100}, RGB565Color::White());
+		FrameBuffer::SetPixel({102,100}, RGB565Color::White());
+		FrameBuffer::SetPixel({103,100}, RGB565Color::White());
+		FrameBuffer::SetPixel({104,100}, RGB565Color::White());
+		FrameBuffer::SetPixel({105,100}, RGB565Color::White());
+		while (HAL_LTDC_GetState(&hltdc) == HAL_LTDC_STATE_READY);
+		/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
+		/* USER CODE BEGIN 3 */
+#pragma clang diagnostic pop
 	}
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
@@ -137,63 +144,63 @@ int main(void)
   */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+	RCC_OscInitTypeDef       RCC_OscInitStruct   = {0};
+	RCC_ClkInitTypeDef       RCC_ClkInitStruct   = {0};
+	RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
-  /** Configure LSE Drive Capability 
-  */
-  HAL_PWR_EnableBkUpAccess();
-  /** Configure the main internal regulator output voltage 
-  */
-  __HAL_RCC_PWR_CLK_ENABLE();
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks 
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 25;
-  RCC_OscInitStruct.PLL.PLLN = 400;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 9;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Activate the Over-Drive mode 
-  */
-  if (HAL_PWREx_EnableOverDrive() != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the CPU, AHB and APB busses clocks 
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+	/** Configure LSE Drive Capability
+	*/
+	HAL_PWR_EnableBkUpAccess();
+	/** Configure the main internal regulator output voltage
+	*/
+	__HAL_RCC_PWR_CLK_ENABLE();
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+	/** Initializes the CPU, AHB and APB busses clocks
+	*/
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSE;
+	RCC_OscInitStruct.HSEState       = RCC_HSE_ON;
+	RCC_OscInitStruct.LSIState       = RCC_LSI_ON;
+	RCC_OscInitStruct.PLL.PLLState   = RCC_PLL_ON;
+	RCC_OscInitStruct.PLL.PLLSource  = RCC_PLLSOURCE_HSE;
+	RCC_OscInitStruct.PLL.PLLM       = 25;
+	RCC_OscInitStruct.PLL.PLLN       = 400;
+	RCC_OscInitStruct.PLL.PLLP       = RCC_PLLP_DIV2;
+	RCC_OscInitStruct.PLL.PLLQ       = 9;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/** Activate the Over-Drive mode
+	*/
+	if (HAL_PWREx_EnableOverDrive() != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/** Initializes the CPU, AHB and APB busses clocks
+	*/
+	RCC_ClkInitStruct.ClockType      = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
+	                                   | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK;
+	RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_6) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC|RCC_PERIPHCLK_RTC;
-  PeriphClkInitStruct.PLLSAI.PLLSAIN = 384;
-  PeriphClkInitStruct.PLLSAI.PLLSAIR = 5;
-  PeriphClkInitStruct.PLLSAI.PLLSAIQ = 2;
-  PeriphClkInitStruct.PLLSAI.PLLSAIP = RCC_PLLSAIP_DIV8;
-  PeriphClkInitStruct.PLLSAIDivQ = 1;
-  PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_8;
-  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_6) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC | RCC_PERIPHCLK_RTC;
+	PeriphClkInitStruct.PLLSAI.PLLSAIN       = 384;
+	PeriphClkInitStruct.PLLSAI.PLLSAIR       = 5;
+	PeriphClkInitStruct.PLLSAI.PLLSAIQ       = 2;
+	PeriphClkInitStruct.PLLSAI.PLLSAIP       = RCC_PLLSAIP_DIV8;
+	PeriphClkInitStruct.PLLSAIDivQ           = 1;
+	PeriphClkInitStruct.PLLSAIDivR           = RCC_PLLSAIDIVR_8;
+	PeriphClkInitStruct.RTCClockSelection    = RCC_RTCCLKSOURCE_LSI;
+	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+	{
+		Error_Handler();
+	}
 }
 
 /* USER CODE BEGIN 4 */
@@ -210,15 +217,16 @@ void SystemClock_Config(void)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  /* USER CODE BEGIN Callback 0 */
+	/* USER CODE BEGIN Callback 0 */
 
-  /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6) {
-    HAL_IncTick();
-  }
-  /* USER CODE BEGIN Callback 1 */
+	/* USER CODE END Callback 0 */
+	if (htim->Instance == TIM6)
+	{
+		HAL_IncTick();
+	}
+	/* USER CODE BEGIN Callback 1 */
 
-  /* USER CODE END Callback 1 */
+	/* USER CODE END Callback 1 */
 }
 
 /**
@@ -227,10 +235,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
+	/* USER CODE BEGIN Error_Handler_Debug */
 	/* User can add his own implementation to report the HAL error return state */
 
-  /* USER CODE END Error_Handler_Debug */
+	/* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT

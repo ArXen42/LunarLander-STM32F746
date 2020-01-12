@@ -20,7 +20,7 @@
 #ifndef __rtc_H
 #define __rtc_H
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
