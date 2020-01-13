@@ -3,6 +3,7 @@
 #include <array>
 #include "RGB565Color.hpp"
 #include "Vector2D.hpp"
+#include "dma2d.h"
 
 namespace LunarLander
 {
@@ -22,11 +23,8 @@ namespace LunarLander
 
 		static void Fill(RGB565Color color)
 		{
-			// TODO: DMA2D
-			for (size_t i = 0; i < MemorySize; i++)
-			{
-				Memory[i] = color.Value;
-			}
+			HAL_DMA2D_Start(&hdma2d, color.Value, reinterpret_cast<uint32_t>(Memory.data()), Width, Height);
+			HAL_DMA2D_PollForTransfer(&hdma2d, 1000);
 		}
 
 		static void SetPixel(const Vector2DUInt16& pos, RGB565Color color)

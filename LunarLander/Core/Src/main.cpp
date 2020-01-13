@@ -120,12 +120,16 @@ int main(void)
 	GameState gameState{};
 	while (true)
 	{
-		while (HAL_LTDC_GetState(&hltdc) != HAL_LTDC_STATE_READY);
+		auto startTick = HAL_GetTick();
+
+		while ((LTDC->CDSR & LTDC_CDSR_VSYNCS) == 0);
 
 		gameState.OnTick();
 		Renderer::Render(gameState);
 
-//		while (HAL_LTDC_GetState(&hltdc) == HAL_LTDC_STATE_READY);
+		auto volatile ticksSpentOnRendering = (HAL_GetTick() - startTick);
+		if (ticksSpentOnRendering < 16)
+			HAL_Delay(16 - ticksSpentOnRendering);
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

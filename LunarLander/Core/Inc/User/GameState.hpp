@@ -19,7 +19,8 @@ namespace LunarLander
 		{
 			_lander.OnTick();
 			_camera.Position = _lander.GetPosition();
-			_camera.Zoom -= 0.01f; //test
+			if (_camera.Zoom > 0.25)
+				_camera.Zoom -= 0.002f; //test
 		}
 
 	private:

@@ -120,8 +120,8 @@ __attribute__((weak)) int _write(int file, char* ptr, int len)
 caddr_t _sbrk(int incr)
 {
 	extern char end asm("end");
-	static char * heap_end;
-	char        * prev_heap_end;
+	static char* heap_end;
+	char       * prev_heap_end;
 
 	if (heap_end == 0)
 		heap_end = &end;
